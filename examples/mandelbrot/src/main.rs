@@ -1,7 +1,9 @@
-fn square_loop(mut c: f64) {
-    let mut x = 0.;
+use num::Complex;
+
+fn complex_square_add_loop(mut c: Complex<f64>) {
+    let mut z = Complex { re: 0.0, im: 0.0 };
     loop {
-        x = x * x + c;
+        z = z * z + c;
     }
 }
 
