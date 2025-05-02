@@ -51,6 +51,33 @@ fn test_parse_complex() {
     assert_eq!(parse_complex(",-0.0625"), None);
 }
 
+/// 出力される画像のピクセルの位置を取り、対応する複素平面上の点を返す。
+/// `bounds` は、出力画像の幅と高さをピクセル単位で与える。 `pixel` は画像上の特定の
+/// ピクセルを(行, 列)ペアの形で指定する。仮引数 `upper_left` , `lower_right` は、
+/// 出力画像に描画する。複素平面を左上と右下で指定する。
+fn pixel_to_point(bounds: (usize, usize),
+                  pixel: (usize, usize),
+                  upper_left: Complex<f64>,
+                  lower_right: Complex<f64>)
+    -> Complex<f64>
+{
+    let (width, height) = (lower_right.re - upper_left.re,
+    upper_left.im - lower_right.im);
+    Complex {
+        re: upper_left.re + pixel.0 as f64 * width  / bounds.0 as f64,
+        im: upper_left.im - pixel.1 as f64 * height / bounds.1 as f64
+    }
+}
+
+#[test]
+fn test_pixel_to_point() {
+    assert_eq!(pixel_to_point((100, 100),(25, 175),
+            Complex { re: -1.0, im: 1.0 },
+            Complex { re: 1.0, im: -1.0 }),
+        Complex { re: -0.5, im: -0.75 });
+}
+
+
 fn complex_square_add_loop(mut c: Complex<f64>) {
     let mut z = Complex { re: 0.0, im: 0.0 };
     loop {
