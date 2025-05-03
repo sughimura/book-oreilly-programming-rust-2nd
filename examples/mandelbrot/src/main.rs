@@ -77,6 +77,28 @@ fn test_pixel_to_point() {
         Complex { re: -0.5, im: -0.75 });
 }
 
+/// 矩形範囲のマンデルボロ集合をピクセルのバッファに描画する
+/// 仮引数 `bounds` はバッファ `pixels` の幅と高さを指定する。
+/// バッファ `pixels` はピクセルのグレースケールの値をバイトで保持する。
+/// `upper_left` と `lower_right` はピクセルバッファの左上と右下に対応する複素平面上の点を指定する
+fn render(pixels: &mut [u8],
+          bounds: (usize, usize),
+          upper_left: Complex<f64>,
+          lower_right: Complex<f64>)
+{
+    assert_eq!(pixels.len(), bounds.0 * bounds.1);
+
+    for row in 0..bounds.1 {
+        for column in 0..bounds.0 {
+            let point = pixel_to_point(bounds, (column, row),
+            upper_left, lower_right);
+            pixels[row * bounds.0 + column] = match escape_time(point, 255) {
+                None => 0,
+                Some(count) => 255 - count as u8
+            }
+        }
+    }
+}
 
 fn complex_square_add_loop(mut c: Complex<f64>) {
     let mut z = Complex { re: 0.0, im: 0.0 };
