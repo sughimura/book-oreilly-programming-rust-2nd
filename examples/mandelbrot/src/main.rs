@@ -116,13 +116,6 @@ fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<
     Ok(())
 }
 
-fn complex_square_add_loop(mut c: Complex<f64>) {
-    let mut z = Complex { re: 0.0, im: 0.0 };
-    loop {
-        z = z * z + c;
-    }
-}
-
 fn main() {
     let args: Vec<String> = std::env::args().collect();
 
